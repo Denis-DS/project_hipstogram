@@ -1,0 +1,2 @@
+(this.webpackJsonphipstagram=this.webpackJsonphipstagram||[]).push([[13],{106:function(e,a,t){"use strict";t.r(a);var n=t(0),s=t.n(n),c=t(13);a.default=s.a.memo((function(){return s.a.createElement("div",{className:"row"},s.a.createElement("div",{className:"col m8 s10 offset-m2 center-align card-panel white"},s.a.createElement("p",null,"Registration completed successfully"),s.a.createElement(c.a,{to:"/singin"},"Log in")))}))}}]);
+//# sourceMappingURL=13.9a50cdd4.chunk.js.map
