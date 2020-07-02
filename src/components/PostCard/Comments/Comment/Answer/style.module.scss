@@ -1,0 +1,64 @@
+button {
+    padding: 0;
+    border: none;
+    font: inherit;
+    color: inherit;
+    background-color: transparent;
+    cursor: pointer;
+
+    &:focus {
+        background-color: inherit;
+    }
+
+    &:disabled {
+        pointer-events: none;
+        background-color: #DFDFDF !important;
+        color: #9F9F9F !important;
+    }
+}
+
+.answerButton {
+    color: #0098d0;
+    font-size: 12px;
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+.answerWrapper {
+    background-color: #f7f7f7;
+    padding: 10px 10px 10px;
+    margin-top: 5px;
+
+    textarea {
+        min-height: 100px;
+        width: 100% !important;
+        resize: vertical;
+    }
+
+    .buttons {
+        margin-top: 5px;
+
+        button {
+            padding: 5px 10px;
+            border-radius: 2px;
+
+            &:hover {
+                box-shadow: 0 3px 3px 0 rgba(0, 0, 0, 0.14), 0 1px 7px 0 rgba(0, 0, 0, 0.12),
+                    0 3px 1px -1px rgba(0, 0, 0, 0.2);
+            }
+        }
+
+        .sendButton {
+            background-color: #0098d0;
+            color: white;
+        }
+
+        .cancelButton {
+            border: 1px solid grey;
+            box-sizing: border-box;
+            margin-left: 20px;
+        }
+    }
+}

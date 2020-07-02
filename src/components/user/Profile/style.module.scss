@@ -1,0 +1,30 @@
+.Post {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.Flex {
+  display: flex;
+  margin-top: 5vh;
+
+  .Info {
+    margin-left: 10vw;
+    width: 100%;
+    h1 {
+      font-size: 3vw;
+    }
+  }
+}
+
+.UserInfo {
+  display: flex;
+  > div {
+    margin: 3vw;
+    font-size: 2vw;
+  }
+}
+
+.Posts {
+  display: flex;
+  flex-direction: column;
+}

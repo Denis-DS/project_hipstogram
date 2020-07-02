@@ -1,0 +1,25 @@
+.commentsWrapper {
+    padding:  0 20px 20px;
+    margin-top: 20px;
+
+    h2{
+        margin: 0;
+        font-size: 18px;
+    }
+
+    .comments{
+
+        ul>li{
+            margin-top: 10px;
+        }
+
+        ul>li>ul>li {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+    }
+
+    .answer {
+        margin-top: 30px;
+    }
+}

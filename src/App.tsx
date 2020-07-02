@@ -1,26 +1,45 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { createStore, applyMiddleware } from "redux";
+import { Provider } from "react-redux";
+import createSagaMiddleware from "redux-saga";
+import { composeWithDevTools } from "redux-devtools-extension";
+import { ConnectedRouter, routerMiddleware } from "connected-react-router";
 
-function App() {
+import "materialize-css/dist/css/materialize.min.css";
+import "./App.css";
+
+import history from "./history";
+import rootReducer from "./store/rootReducer";
+import rootSaga from "./store/rootSaga";
+import Routes from "./Routes";
+import Header from "./components/Header/";
+import Footer from "./components/Footer";
+
+const sagaMiddleware = createSagaMiddleware();
+
+const store = createStore(
+  rootReducer,
+  composeWithDevTools(
+    applyMiddleware(routerMiddleware(history), sagaMiddleware)
+  )
+);
+
+sagaMiddleware.run(rootSaga);
+
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Provider store={store}>
+      <ConnectedRouter history={history}>
+        <Header />
+        <main>
+          <div className="container">
+            <Routes />
+          </div>
+        </main>
+        <Footer />
+      </ConnectedRouter>
+    </Provider>
   );
-}
+};
 
-export default App;
+export default React.memo(App);

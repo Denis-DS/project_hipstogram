@@ -1,0 +1,46 @@
+.logoWrapper {
+  position: relative;
+  width: 140px;
+  margin: 0 auto 20px auto;
+
+  .avatar {
+    width: 150px;
+    height: 150px;
+    border: 1px solid black;
+  }
+
+  .inputFileWrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    // top: 0;
+    bottom: -10px;
+    // left: 0;
+    right: -10px;
+    width: 30px;
+    height: 30px;
+    background-color: white;
+    border-radius: 50%;
+
+    .inputFile {
+      width: 0.1px;
+      height: 0.1px;
+      opacity: 0;
+      overflow: hidden;
+      position: absolute;
+      z-index: -1;
+    }
+
+    .inputFile + label {
+      cursor: pointer;
+      line-height: 1;
+      display: block;
+    }
+
+    .inputFile:focus + label,
+    .inputFile + label:hover {
+      color: black;
+    }
+  }
+}
