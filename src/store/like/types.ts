@@ -12,40 +12,47 @@ export interface ILikeState {
 
 export interface IGetLikeSuccess {
   readonly _id: string;
-  readonly createdAt: string;
-  readonly nick: string;
-  readonly text: string;
+  readonly idPost: string;
+  readonly images: string | null;
+  readonly login: string;
   readonly avatar: string;
-  readonly answers: IGetLikeSuccess[] | null;
+  readonly idLike: string;
 }
 
 export interface ILike {
   readonly _id: string;
-  readonly createdAt: string;
-  readonly nick: string;
-  readonly text: string;
+  readonly login: string;
   readonly avatar: string;
+  readonly idPost: string;
+  readonly images: string;
 }
 
 export interface ISetLikePayload {
-  answerTo: string | null;
-  text: string;
+  user: string | null;
+  post: string | null;
 }
 
-export interface ILikeDataPayload {
-  _id: string;
-  text: string | any;
-  createdAt: string;
-  owner: ILikeDataOwner;
-  answers: ILikeDataPayload[] | null;
-}
-
-interface ILikeDataOwner {
-  avatar: { url: string | null } | null;
-  nick: string | null;
+export interface IDelLikePayload {
   _id: string | null;
 }
 
 interface ILikeDataPost {
-  _id: string | null;
+  images: IImages[];
+  _id: string;
+}
+
+export interface ILikeDataPayload {
+  _id: string;
+  owner: ILikeDataOwner;
+  post: ILikeDataPost;
+}
+
+interface IImages {
+  url: string | null;
+}
+
+interface ILikeDataOwner {
+  avatar: { url: string | null } | null;
+  login: string | null;
+  _id: string;
 }

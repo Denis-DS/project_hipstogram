@@ -1,38 +1,37 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import classnames from "classnames";
 import { bindActionCreators, Dispatch } from "redux";
 import { IRootAction, IRootState } from "../../../store/rootReducer";
 import * as profileActions from "../../../store/profile/actions";
 import * as actions from "../../../store/posts/actions";
-import { IPosts } from "../../../store/posts/types";
 import style from "./style.module.scss";
 import { connect } from "react-redux";
 import Avatar from "../Avatar";
-import Post from "../../Posts/Post";
 import { Link, RouteComponentProps } from "react-router-dom";
-import Sorting from "../../Posts/Sorting";
+import Gallery from "../../posts/Gallery";
+import Following from "../Follow";
+import Message from "../../AddMessage";
 
 const mapDispatchToProps = (dispatch: Dispatch<IRootAction>) =>
   bindActionCreators(
     {
       getPosts: actions.getPosts.request,
       getProfile: profileActions.getProfile.request,
-      deleteSuccess: profileActions.deleteSuccess,
+      setPageIncrement: actions.setPageIncrement,
+      setPageDecrement: actions.setPageDecrement,
     },
     dispatch
   );
 
 const mapStateToProps = (state: IRootState) => ({
-  id: state.profile.profileData._id,
   login: state.profile.profileData.login,
   nick: state.profile.profileData.nick,
   followers: state.profile.profileData.followers,
   following: state.profile.profileData.following,
-  errorServer: state.profile.profileData.error,
-  success: state.profile.profileData.success,
   postsData: state.posts.postsData,
-  pagesCount: state.posts.pagesCount,
-  postsLimit: state.posts.postsLimit,
+  postsCount: state.posts.postsCount,
+  _id: state.auth.authData.id,
+  isFetching: state.posts.isFetching,
 });
 
 type TParams = { id: string; q: string };
@@ -41,22 +40,49 @@ type IProps = ReturnType<typeof mapDispatchToProps> &
   ReturnType<typeof mapStateToProps> &
   RouteComponentProps<TParams>;
 
-const Profile: React.FC<IProps> = (props: IProps) => {
-  const quest = props.match.params.q || null;
-  const page = 1;
-  const idUser = props.match.params.id;
+const Profile: React.FC<IProps> = ({
+  getPosts,
+  getProfile,
+  setPageIncrement,
+  setPageDecrement,
+  login,
+  nick,
+  followers,
+  following,
+  postsData,
+  postsCount,
+  _id,
+  isFetching,
+  match,
+}: IProps) => {
+  const quest = match.params.q || null;
+  const idUser = match.params.id;
+  const type = "myposts";
+  const [arr, setArr] = useState(postsData);
+
+  const potsStore = () => {
+    if (postsData.length !== 0 && arr.length < postsCount) {
+      setArr(arr.concat(postsData));
+    }
+  };
+
+  const hendleScroll = () => {
+    if (postsData != null || arr.length < postsCount) {
+      setPageIncrement();
+      getPosts({ type, quest, idUser });
+    }
+  };
 
   useEffect(() => {
-    props.getProfile({ idUser });
-    // if (!props.id) {
-    //   props.getProfile({ idUser: props.match.params.id });
-    // }
-  }, [props.match]);
+    !postsData.some((n) => arr.includes(n)) && potsStore();
+  }, [postsData]);
 
   useEffect(() => {
-    const type = "myposts";
-    props.getPosts({ type, page, quest, idUser });
-  }, [props.match, props.postsLimit]);
+    setArr([]);
+    setPageDecrement();
+    getProfile({ idUser: match.params.id });
+    getPosts({ type, quest, idUser });
+  }, [match.params.id]);
 
   return (
     <div className={classnames("row", style.wrapper)}>
@@ -65,46 +91,80 @@ const Profile: React.FC<IProps> = (props: IProps) => {
           <div>
             <Avatar />
           </div>
+          <Message nick={login} userId={idUser} />
           <div className={style.Info}>
-            <div>
-              <h1 className="center-align">{props.login}</h1>
+            <div className={style.UserFollow}>
+              <div>
+                <h1>{login}</h1>
+                <h5>{nick}</h5>
+              </div>
+              {_id === match.params.id ? null : (
+                <>
+                  <a
+                    className={classnames("modal-trigger", style.messageBtn)}
+                    href="#modal1"
+                  >
+                    <i className="material-icons right">send</i>
+                  </a>
+                  <Following followingID={match.params.id} />
+                </>
+              )}
             </div>
             <div className={style.UserInfo}>
-              <div>{0}: posts</div>
               <div>
-                <Link className="black-text accent-4" to="/">
-                  {"0"} : followers
+                {idUser === _id ? (
+                  <Link className="black-text accent-4" to={`/myposts/${_id}`}>
+                    {postsCount ? postsCount : 0} : Posts
+                  </Link>
+                ) : (
+                  <a href="/" className="black-text accent-4">
+                    {postsCount ? postsCount : 0} : Posts
+                  </a>
+                )}
+              </div>
+              <div>
+                <Link
+                  className="black-text accent-4"
+                  to={`/followers/${idUser}`}
+                >
+                  {followers ? followers?.length : "0"} : Followers
                 </Link>
               </div>
               <div>
-                <Link className="black-text accent-4" to="/">
-                  {"0"} : following
+                <Link
+                  className="black-text accent-4"
+                  to={`/following/${idUser}`}
+                >
+                  {following ? following?.length : "0"} : Following
                 </Link>
               </div>
             </div>
           </div>
         </div>
-        <div className={style.Posts}>
-          <Sorting />
-          <div className={style.Post}>
-            {props.postsData && props.postsData.length ? (
-              props.postsData.map((d: IPosts) => (
-                <Post
-                  likesCount={d.likesCount}
-                  comments={d.comments}
-                  key={d._id}
-                  _id={d._id}
-                  title={d.title}
-                  createdAt={d.createdAt}
-                  images={d.images}
-                />
-              ))
+        <div className={style.Span}></div>
+        <div className={style.Post}>
+          {postsData.length ? (
+            <Gallery
+              postsData={arr}
+              isMyPosts={false}
+              onScroll={hendleScroll}
+              postFollowing={false}
+            />
+          ) : (
+            <div className="center-align">
+              {!isFetching
+                ? "The results were not found for your request."
+                : ""}
+            </div>
+          )}
+          <div className={style.isLoading}>
+            {isFetching ? (
+              <div>Loading...</div>
             ) : (
-              <div className="center-align">
-                The results were not found for your request.{" "}
-              </div>
+              <div className={style.sicretDiv}>----------</div>
             )}
           </div>
+          <div className={style.sicretDiv}>----------</div>
         </div>
       </div>
     </div>

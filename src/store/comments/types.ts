@@ -17,6 +17,7 @@ export interface IGetCommentsSuccess {
   readonly text: string;
   readonly avatar: string;
   readonly answers: IGetCommentsSuccess[] | null;
+  readonly userId: string;
 }
 
 export interface IComment {
@@ -24,6 +25,7 @@ export interface IComment {
   readonly createdAt: string;
   readonly nick: string;
   readonly text: string;
+  readonly userId: string;
   readonly avatar: string;
 }
 
@@ -43,4 +45,5 @@ export interface ICommentsDataPayload {
 interface ICommentsDataOwner {
   avatar: { url: string | null } | null;
   nick: string | null;
+  _id: string;
 }

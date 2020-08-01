@@ -6,7 +6,7 @@ const RegSuccess = () => {
     <div className="row">
       <div className="col m8 s10 offset-m2 center-align card-panel white">
         <p>Registration completed successfully</p>
-        <Link to="/singin">Log in</Link>
+        <Link to="/login">Log in</Link>
       </div>
     </div>
   );

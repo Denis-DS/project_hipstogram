@@ -5,7 +5,7 @@ import classnames from "classnames";
 
 interface IProps {
   authToken: string | null;
-  nick: string | null;
+  login: string | null;
 }
 
 const RightAuthMenu = (props: IProps) => {
@@ -15,18 +15,18 @@ const RightAuthMenu = (props: IProps) => {
       href="#!"
       data-target="dropdown1"
     >
-      <span className={classnames("truncate left", style.nick)}>
-        {props.nick}
+      <span className={classnames("truncate left", style.login)}>
+        {props.login}
       </span>
       <i className="material-icons right">arrow_drop_down</i>
     </a>
   ) : (
     <div className={style.logIn}>
-      <Link to="/singin" className="indigo-text accent-4">
-        Sing in
+      <Link to="/registration" className="black-text accent-4">
+        Registration
       </Link>
       <span>|</span>
-      <Link to="/login" className="indigo-text accent-4">
+      <Link to="/login" className="black-text accent-4">
         Log in
       </Link>
     </div>

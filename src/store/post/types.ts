@@ -24,6 +24,8 @@ export interface IPostcardData {
   readonly images: IImages[];
   readonly likesCount: number;
   readonly likes: IPostCardLikes[] | null;
+  readonly login: string;
+  readonly comments: IComments[];
 }
 
 export interface IPostCardPayload {
@@ -34,9 +36,14 @@ export interface IPostCardPayload {
   images: IImages[] | null;
   likesCount: number;
   likes: IPostCardLikes[];
+  comments: IComments[];
 }
 
-interface IPostCardLikes {
+export interface IComments {
+  _id: string;
+}
+
+export interface IPostCardLikes {
   _id: string;
   owner: { _id: string };
 }
@@ -45,5 +52,6 @@ interface IPostCardOwner {
   createdAt: string;
   nick: string | null;
   _id: string;
+  login: string;
   avatar: { url: string | null };
 }

@@ -12,6 +12,8 @@ import {
   ICommentsDataPayload,
 } from "../store/comments/types";
 import { IGetLikeSuccess, ILikeDataPayload } from "../store/like/types";
+import { IUserSuggestionsPayload, IUserSuggestions } from "../store/user/types";
+import img from "../img/user-img.png";
 import { upLoadPhoto } from "./api";
 
 export const handlerComentsData = (
@@ -26,9 +28,10 @@ export const handlerComentsData = (
         createdAt: formatDate(d.createdAt),
         avatar: d.owner.avatar?.url
           ? d.owner.avatar?.url
-          : "images/696abe18feffa8c402f137b7423a869e",
+          : "images/0f002ed3beed73ec35d983ee39492793",
         nick: d.owner.nick ? d.owner.nick : "No name",
         answers: d.answers !== null ? handlerComentsData(d.answers) : null,
+        userId: d.owner._id,
       };
     })
   );
@@ -42,14 +45,18 @@ export const handlerLikeData = (
     likeData &&
     likeData.map((d) => {
       return {
-        _id: d._id,
-        text: d.text ? d.text : "No text",
-        createdAt: new Date(Number(d.createdAt)).toLocaleString(),
+        idLike: d._id,
+        _id: d.owner._id,
+        idPost: d.post?._id,
+        images: d.post?.images
+          ? d.post.images[0]?.url
+            ? d.post.images[0]?.url
+            : "images/dccf1f2c0f3750711e76f4ef5e24b041"
+          : "images/dccf1f2c0f3750711e76f4ef5e24b041",
         avatar: d.owner.avatar?.url
           ? d.owner.avatar?.url
-          : "images/696abe18feffa8c402f137b7423a869e",
-        nick: d.owner.nick ? d.owner.nick : "No name",
-        answers: d.answers !== null ? handlerComentsData(d.answers) : null,
+          : "images/0f002ed3beed73ec35d983ee39492793",
+        login: d.owner.login ? d.owner.login : "No name",
       };
     })
   );
@@ -79,7 +86,7 @@ export async function handlerPostImg(
   return idPhotos;
 }
 
-//AdvCard
+//postCard
 
 export function formatDate(date: string): string {
   return new Date(Number(date)).toLocaleDateString();
@@ -91,7 +98,7 @@ export function handlerImagesPost(images: IImages[] | null) {
     for (let img of images) {
       img.url &&
         result.push({
-          url: `http://hipstagram.asmer.fs.a-level.com.ua/${img.url}`,
+          url: `/${img.url}`,
           _id: img._id,
         });
     }
@@ -110,14 +117,15 @@ export function handlerPostCardData(
     postDate: formatDate(postCardData.createdAt),
     title: postCardData.title || "No text",
     userDate: formatDate(postCardData.owner.createdAt),
-
+    login: postCardData.owner.login,
     nick: postCardData.owner.nick ? postCardData.owner.nick : "No name",
     avatar: postCardData.owner.avatar
-      ? `http://hipstagram.asmer.fs.a-level.com.ua/${postCardData.owner.avatar.url}`
-      : "https://apollo-ireland.akamaized.net/v1/files/76ojf53mron92-UA/image;s=261x203",
+      ? `/${postCardData.owner.avatar.url}`
+      : img,
     images: handlerImagesPost(postCardData.images),
     likesCount: Number(postCardData.likesCount),
     likes: postCardData.likes,
+    comments: postCardData.comments,
   };
 }
 
@@ -162,9 +170,9 @@ export function handlerPostsData(postsData: IPostsDataPayload[]) {
       createdAt: new Date(Number(d.createdAt)).toLocaleString(),
       images:
         d.images && d.images[0]?.url
-          ? `http://hipstagram.asmer.fs.a-level.com.ua/${d.images[0].url}`
-          : "https://boatparts.com.ua/design/boatparts/images/no_image.png",
-      likesCount: d.likesCount || "0",
+          ? `/${d.images[0].url}`
+          : "/images/dccf1f2c0f3750711e76f4ef5e24b041",
+      likes: d.likes?.length || 0,
       comments: d.comments ? d.comments.length : "0",
     };
   });
@@ -178,16 +186,28 @@ export function handlerMessagesData(
   return messagesData.map((d: IMessageDataPayload) => {
     return {
       _id: d._id,
-      text: d.text ? d.text : "Не умею писать",
+      text: d.text ? d.text : "No text",
       createdAt: formatDate(d.createdAt),
       image: d.image?.url ? d.image.url : null,
       avatar: d.owner.avatar?.url
         ? d.owner.avatar?.url
-        : "images/696abe18feffa8c402f137b7423a869e",
-      nick: d.owner.nick ? d.owner.nick : "Безымянный",
-      phones: d.owner.phones?.length
-        ? d.owner.phones.join(", ")
-        : "Нет телефона",
+        : "images/0f002ed3beed73ec35d983ee39492793",
+      login: d.owner.login ? d.owner.login : "No name",
+    };
+  });
+}
+
+//User
+
+export function handlerUserSuggestions(
+  userSuggestionsData: IUserSuggestionsPayload[]
+): IUserSuggestions[] {
+  return userSuggestionsData.map((d: IUserSuggestionsPayload) => {
+    return {
+      ...d,
+      _id: d._id,
+      login: d.login,
+      avatar: d?.avatar ? `/${d.avatar.url}` : img,
     };
   });
 }

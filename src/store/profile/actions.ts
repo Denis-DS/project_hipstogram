@@ -4,6 +4,7 @@ import {
   ISetProfileData,
   IAvatar,
   IGetProfileRequest,
+  ISetFollowing,
 } from "./types";
 
 export const getProfile = createAsyncAction(
@@ -19,6 +20,12 @@ export const setProfile = createAsyncAction(
   "profile/SET_PROFILE_SUCCESS",
   "profile/SET_PROFILE_FAILURE"
 )<ISetProfileData, string, string>();
+
+export const setFollowing = createAsyncAction(
+  "profile/SET_FOLLOWING_REQUEST",
+  "profile/SET_FOLLOWING_SUCCESS",
+  "profile/SET_FOLLOWING_FAILURE"
+)<ISetFollowing, string, string>();
 
 export const setAvatar = createAsyncAction(
   "profile/SET_AVATAR_REQUEST",

@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Dispatch, bindActionCreators } from "redux";
-import { IRootAction, IRootState } from "../../../store/rootReducer";
-import * as actions from "../../../store/message/actions";
+import { IRootAction, IRootState } from "../../store/rootReducer";
+import * as actions from "../../store/message/actions";
 import style from "./style.module.scss";
 import { connect } from "react-redux";
-import Photo from "../../AddPost/Photo";
+import Photo from "../AddPost/Photo";
 
 interface IParentProps {
   nick: string;
@@ -54,7 +54,7 @@ const AddMessage = (props: IProps) => {
   return (
     <div id="modal1" className="modal modal-fixed-footer">
       <div className="modal-content">
-        <h4 className={style.header}>Write message{props.nick}</h4>
+        <h4 className={style.header}>Write message {props.nick}</h4>
         <div className={style.photoWrapper}>
           <Photo
             id="photo1"

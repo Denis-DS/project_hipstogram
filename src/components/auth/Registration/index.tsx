@@ -26,7 +26,7 @@ const mapDispatchToProps = (dispatch: Dispatch<IRootAction>) =>
 type AuthProps = ReturnType<typeof mapStateToProps> &
   ReturnType<typeof mapDispatchToProps>;
 
-const Authorization: React.FC<AuthProps> = (props) => {
+const Registration: React.FC<AuthProps> = ({ deleteError, regUser, error }) => {
   const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
 
@@ -34,7 +34,7 @@ const Authorization: React.FC<AuthProps> = (props) => {
 
   React.useEffect(() => {
     return () => {
-      props.deleteError();
+      deleteError();
     };
   }, []);
 
@@ -61,7 +61,7 @@ const Authorization: React.FC<AuthProps> = (props) => {
     errors.push(
       checkLengthInput(password, "password", minPassLength, 0, setPassword)
     );
-    if (errors.indexOf(false) === -1) props.regUser({ login, password });
+    if (errors.indexOf(false) === -1) regUser({ login, password });
   };
 
   return (
@@ -71,10 +71,10 @@ const Authorization: React.FC<AuthProps> = (props) => {
         <Input
           id="login"
           type="text"
-          labelText="Email"
+          labelText="Login"
           value={login}
           onChangeHandler={loginHandler}
-          dataError="Email should be like this: email@email.com"
+          dataError="Please write login"
         />
         <Input
           id="password"
@@ -84,9 +84,7 @@ const Authorization: React.FC<AuthProps> = (props) => {
           onChangeHandler={passwordHandler}
           dataError={"Not a character of " + minPassLength + " characters"}
         />
-        {props.error && (
-          <div className="card-panel red lighten-3">{props.error}</div>
-        )}
+        {error && <div className="card-panel red lighten-3">{error}</div>}
         <button
           className="btn waves-effect waves-light"
           type="submit"
@@ -103,4 +101,4 @@ const Authorization: React.FC<AuthProps> = (props) => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(React.memo(Authorization));
+)(React.memo(Registration));

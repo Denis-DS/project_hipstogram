@@ -6,8 +6,9 @@ h1 {
   background-color: #fafafa;
 }
 
-main {
+#main {
   height: calc(100vh - 130px);
   width: 100%;
   overflow: scroll;
+  background-color: rgb(255, 255, 255);
 }

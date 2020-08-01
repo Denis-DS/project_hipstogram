@@ -32,9 +32,9 @@ export function* setMessageSaga() {
         imgId
       );
       if (result)
-        yield put(actions.setMessage.success("Сообщение успешно отправлено"));
+        yield put(actions.setMessage.success("Message sent successfully"));
     } catch (e) {
-      yield put(actions.setMessage.failure("Сбой в матрице"));
+      yield put(actions.setMessage.failure("Error"));
       console.error(e);
     }
   }

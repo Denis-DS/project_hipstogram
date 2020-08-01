@@ -13,7 +13,7 @@ const DropdownMenu = (props: IProps) => {
     if (props.isMobile) {
       const elem: HTMLElement | null = document.getElementById("mobile-demo");
       if (elem) {
-        const instance = M.Sidenav.getInstance(elem);
+        const instance = M.Sidenav.init(elem, { edge: "right" });
         instance.close();
       }
     }
@@ -27,6 +27,11 @@ const DropdownMenu = (props: IProps) => {
         </Link>
       </li>
       <li onClick={closeMenuHandler}>
+        <Link to="/direct" className="indigo-text accent-4">
+          Direct
+        </Link>
+      </li>
+      <li onClick={closeMenuHandler}>
         <Link
           to="/login"
           className="indigo-text accent-4"
@@ -37,7 +42,7 @@ const DropdownMenu = (props: IProps) => {
       </li>
       {props.isMobile && (
         <li className={style.close} onClick={closeMenuHandler}>
-          Закрыть
+          Close
         </li>
       )}
     </React.Fragment>
@@ -50,12 +55,12 @@ const DropdownMenu = (props: IProps) => {
       </li>
       <li onClick={closeMenuHandler}>
         <Link to="/singin" className="indigo-text accent-4">
-          Sing in
+          Registration
         </Link>
       </li>
       {props.isMobile && (
         <li className={style.close} onClick={closeMenuHandler}>
-          Закрыть
+          Close
         </li>
       )}
     </React.Fragment>

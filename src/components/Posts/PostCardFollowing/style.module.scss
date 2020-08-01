@@ -1,5 +1,6 @@
 .rowcorrect {
   margin-top: 20px;
+  width: 100%;
 
   .contentWrapper {
     border: 1px solid #8080804f;
@@ -12,7 +13,7 @@
 
       img {
         width: 100%;
-        max-height: 30em;
+        height: 60vh;
         object-fit: cover;
         display: inline-block;
         border-radius: 0;
@@ -43,29 +44,6 @@
   }
 
   .sidebarWrapper {
-    .price {
-      padding: 0 5px;
-      height: 54px;
-      position: relative;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background-color: #ffe000;
-
-      strong {
-        font-size: 22px;
-      }
-    }
-
-    .price::after {
-      content: "";
-      position: absolute;
-      left: -47px;
-      top: 0px;
-      border: 27px solid transparent;
-      border-right: 20px solid #ffe000;
-    }
-
     .userWrapper {
       display: flex;
       align-items: center;
@@ -80,7 +58,7 @@
 
       .nick {
         margin: 10px 5% 0 0;
-        padding-left: 20%;
+        padding-left: 5%;
         text-align: center;
 
         span {
@@ -97,8 +75,13 @@
   }
 }
 
-.userAtr {
-  display: flex;
+.src {
+  width: 100%;
+
+  .userAtr {
+    display: flex;
+    width: 100%;
+  }
 }
 
 .userActions {
@@ -108,9 +91,36 @@
   .userTriger {
     display: flex;
 
+    .likeBtn {
+      i {
+        color: black;
+        margin: 0;
+      }
+    }
+
     .messageBtn {
       i {
         color: black;
+      }
+    }
+  }
+}
+
+.commentsCount {
+  padding-left: 10px;
+}
+
+@media screen and (max-width: 1024px) {
+  .rowcorrect {
+    .contentWrapper {
+      .topPhoto {
+        img {
+          width: 100%;
+          height: 30vh;
+          object-fit: cover;
+          display: inline-block;
+          border-radius: 0;
+        }
       }
     }
   }

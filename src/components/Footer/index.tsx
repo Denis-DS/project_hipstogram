@@ -4,21 +4,23 @@ import { bindActionCreators, Dispatch } from "redux";
 import style from "./style.module.scss";
 import { IRootState, IRootAction } from "../../store/rootReducer";
 import * as authActions from "../../store/auth/actions";
-import * as profileActions from "../../store/profile/actions";
+import * as profileActions from "../../store/user/actions";
 import NavWraper from "./NavWraper";
 
 const mapStateToProps = (state: IRootState) => ({
   authToken: state.auth.authData.authToken,
-  nick: state.auth.authData.login,
-  avatar: state.profile.profileData.avatar?.url,
-  id: state.profile.profileData._id,
+  login: state.auth.authData.login,
+  loginUser: state.profile.profileData.login,
+  avatarUser: state.profile.profileData.avatar?.url,
+  avatar: state.user.profileData.avatar?.url,
+  id: state.user.profileData._id,
   _id: state.auth.authData.id,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<IRootAction>) =>
   bindActionCreators(
     {
-      getProfile: profileActions.getProfile.request,
+      getUser: profileActions.getUser.request,
       unAuthUser: authActions.unAuthUser,
     },
     dispatch
@@ -27,21 +29,22 @@ const mapDispatchToProps = (dispatch: Dispatch<IRootAction>) =>
 type IProps = ReturnType<typeof mapDispatchToProps> &
   ReturnType<typeof mapStateToProps>;
 
-const Footer: React.FC<IProps> = (props: IProps) => {
+const Footer: React.FC<IProps> = ({
+  loginUser,
+  avatarUser,
+  authToken,
+  login,
+  avatar,
+  _id,
+  getUser,
+}: IProps) => {
   useEffect(() => {
-    if (!props.id) {
-      props.getProfile({ idUser: props._id });
-    }
-  }, [props]);
+    getUser();
+  }, [loginUser, avatarUser]);
 
   return (
     <footer className={style.footer}>
-      <NavWraper
-        authToken={props.authToken}
-        nick={props.nick}
-        avatar={props.avatar}
-        id={props._id}
-      />
+      <NavWraper authToken={authToken} login={login} avatar={avatar} id={_id} />
     </footer>
   );
 };

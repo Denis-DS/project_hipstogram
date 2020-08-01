@@ -9,26 +9,40 @@ export interface IPosts {
   readonly images: string;
   readonly createdAt: string;
   readonly comments: string | number;
-  readonly likesCount: string;
+  readonly likes: number;
 }
 
 export interface IState {
   readonly postsData: IPosts[];
+  readonly postsCount: number;
+  readonly postsFollowingCount: number;
   readonly pagesCount: number;
   readonly postsLimit: number;
   readonly sortType: string;
   readonly isFetching: boolean;
+  readonly page: number;
+  readonly postsFollowingData: IPosts[];
 }
 
 export interface IPostsPayload {
   type: string;
-  page: number;
   quest: string | null;
   idUser: string | null;
 }
 
 export interface IGetPostsSuccess {
   readonly postsData: IPosts[];
+  readonly pagesCount: number;
+}
+
+export interface IFollowingPostsPayload {
+  type: string;
+  quest: string | null;
+  idUser: string | null;
+}
+
+export interface IGetFollowingPostsSuccess {
+  readonly postsFollowingData: IPosts[];
   readonly pagesCount: number;
 }
 
@@ -74,9 +88,8 @@ interface IFilterComments {
 }
 
 interface IFilterLike {
-  "owner._id": number;
   "post._id": number;
-  answerTo: null;
+  "user._id": number;
 }
 
 interface ISortPosComments {
@@ -92,7 +105,7 @@ export interface IPostsDataPayload {
   title: string | null;
   createdAt: string;
   images: IImages[] | null;
-  likesCount: string;
+  likes: ILikes[];
   comments: IComments[] | null;
 }
 
@@ -103,4 +116,15 @@ export interface IComments {
 export interface IImages {
   url: string | null;
   _id: string;
+}
+
+export interface ILikes {
+  _id: string;
+}
+
+export interface IGallery {
+  postsData: IPosts[];
+  isMyPosts: boolean;
+  onScroll: Function;
+  postFollowing: boolean;
 }

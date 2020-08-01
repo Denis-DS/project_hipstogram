@@ -12,12 +12,8 @@ const initialState: IProfileDataState = {
       _id: "",
       url: "",
     },
-    followers: {
-      _id: "",
-    },
-    following: {
-      _id: "",
-    },
+    followers: [],
+    following: [],
     error: "",
     success: "",
   },
@@ -50,6 +46,14 @@ export default (
         },
       };
     case getType(actions.setProfile.success):
+      return {
+        ...state,
+        profileData: {
+          ...state.profileData,
+          success: action.payload,
+        },
+      };
+    case getType(actions.setFollowing.success):
       return {
         ...state,
         profileData: {

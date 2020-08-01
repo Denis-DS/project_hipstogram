@@ -4,7 +4,7 @@ import style from "./style.module.scss";
 
 interface IProps {
   authToken: string | null;
-  nick: string | null;
+  login: string | null;
   avatar: string | undefined;
   id: string | null;
 }
@@ -14,12 +14,12 @@ const RightAuthMenu = (props: IProps) => {
     <div className={style.navWraper}>
       <ul className={style.navBar}>
         <li>
-          <Link to="/myposts">
+          <Link to="/" id="house">
             <span className="material-icons black-text">house</span>
           </Link>
         </li>
         <li>
-          <Link to="/">
+          <Link to="/posts">
             <span className="material-icons black-text">search</span>
           </Link>
         </li>
@@ -36,7 +36,11 @@ const RightAuthMenu = (props: IProps) => {
         <li>
           <Link to={`/profile/${props.id}`}>
             {props.avatar ? (
-              <img src={`/${props.avatar}`} alt="photoUser" />
+              <img
+                src={`/${props.avatar}`}
+                alt="photoUser"
+                className={style.PhotoUser}
+              />
             ) : (
               <span className="large material-icons black-text">face</span>
             )}

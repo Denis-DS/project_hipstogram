@@ -16,8 +16,8 @@ export interface IProfileData {
   readonly login: string;
   readonly nick: string | null;
   readonly avatar: IAvatar | null;
-  readonly followers: IFollow | null;
-  readonly following: IFollow | null;
+  readonly followers: IFollow[] | null;
+  readonly following: IFollow[] | null;
   readonly error: string;
   readonly success: string;
 }
@@ -29,9 +29,15 @@ export interface IAvatar {
 
 export interface IFollow {
   readonly _id: string;
+  readonly login: string;
+  readonly avatar: IAvatar | null;
 }
 
 export interface ISetProfileData {
   readonly login: string;
   readonly nick: string;
+}
+
+export interface ISetFollowing {
+  readonly followingID: string;
 }

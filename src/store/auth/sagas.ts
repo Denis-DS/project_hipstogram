@@ -50,13 +50,11 @@ export function* regUserSaga() {
       if (result) {
         yield put(push("/regsuccess"));
       } else {
-        yield put(
-          actions.authUser.failure("Такой пользователь уже существует")
-        );
+        yield put(actions.authUser.failure("This user already exists"));
       }
     } catch (error) {
       console.error(error);
-      yield put(actions.authUser.failure("Сервер не доступен"));
+      yield put(actions.authUser.failure("Server error"));
     }
   }
 }

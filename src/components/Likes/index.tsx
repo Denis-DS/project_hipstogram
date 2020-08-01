@@ -26,15 +26,21 @@ type TProps = ReturnType<typeof mapDispatchToProps> &
   ReturnType<typeof mapStateToProps> &
   RouteComponentProps<TParams>;
 
-const Likes = (props: TProps) => {
+const Likes = ({ getLike, match, likeData }: TProps) => {
   useEffect(() => {
-    props.getLike({ idPost: props.match.params.id });
-  }, []);
+    getLike({ idPost: match.params.id });
+  }, [match]);
 
   const printComments = (commentsData: IGetLikeSuccess[]) => {
     return commentsData.map((d: IGetLikeSuccess) => (
-      <li key={d._id}>
-        <Like avatar={d.avatar} nick={d.nick} _id={d._id} />
+      <li key={d.idLike}>
+        <Like
+          avatar={d.avatar}
+          login={d.login}
+          _id={d._id}
+          images={d.images}
+          idPost={d.idPost}
+        />
       </li>
     ));
   };
@@ -43,8 +49,8 @@ const Likes = (props: TProps) => {
     <div className={style.commentsWrapper}>
       <h2>Likes</h2>
       <div className={style.comments}>
-        {!props.likeData.length && <p>Not yet like</p>}
-        <ul>{printComments(props.likeData)}</ul>
+        {!likeData.length && <p>Not yet like</p>}
+        <ul>{printComments(likeData)}</ul>
       </div>
     </div>
   );

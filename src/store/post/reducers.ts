@@ -14,6 +14,8 @@ const initialState: IPostState = {
     images: [{ url: "", _id: "" }],
     likesCount: 0,
     likes: [{ _id: "", owner: { _id: "" } }],
+    login: "",
+    comments: [],
   },
   isPost: true,
 };

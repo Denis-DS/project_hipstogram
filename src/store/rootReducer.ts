@@ -18,6 +18,8 @@ import commentsReducer from "./comments/reducers";
 import { TCommentsAction } from "./comments/types";
 import likeReducer from "./like/reducers";
 import { TLikeAction } from "./like/types";
+import userReducer from "./user/reducers";
+import { IUserAction } from "./user/types";
 
 const rootReducer = combineReducers({
   router: connectRouter(history),
@@ -28,6 +30,7 @@ const rootReducer = combineReducers({
   message: messageReducer,
   comments: commentsReducer,
   like: likeReducer,
+  user: userReducer,
 });
 
 export type IRootState = StateType<typeof rootReducer>;
@@ -40,6 +43,7 @@ export type IRootAction =
   | AddAdvAction
   | TMessageAction
   | TCommentsAction
-  | TLikeAction;
+  | TLikeAction
+  | IUserAction;
 
 export default rootReducer;

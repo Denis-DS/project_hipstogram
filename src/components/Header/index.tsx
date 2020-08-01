@@ -13,7 +13,7 @@ import RightAuthMenu from "./RightAuthMenu";
 
 const mapStateToProps = (state: IRootState) => ({
   authToken: state.auth.authData.authToken,
-  nick: state.auth.authData.login,
+  login: state.user.profileData.login,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<IRootAction>) =>
@@ -35,12 +35,12 @@ const Header: React.FC<IProps> = (props) => {
 
   document.addEventListener("DOMContentLoaded", function (e) {
     let elems = document.querySelectorAll(".sidenav");
-    M.Sidenav.init(elems);
+    M.Sidenav.init(elems, { edge: "right" });
   });
 
   return (
     <React.Fragment>
-      <nav className={classnames("white", style.NavWrapper)}>
+      <nav className={classnames(style.NavWrapper)}>
         <div className={classnames("container", style.h100)}>
           <div className="nav-wrapper">
             <Link className="left brand-logo black-text" to="/">
@@ -55,7 +55,10 @@ const Header: React.FC<IProps> = (props) => {
             </a>
             <ul className="right">
               <li className="hide-on-small-and-down">
-                <RightAuthMenu authToken={props.authToken} nick={props.nick} />
+                <RightAuthMenu
+                  authToken={props.authToken}
+                  login={props.login}
+                />
               </li>
             </ul>
           </div>

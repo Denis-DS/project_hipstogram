@@ -3,6 +3,12 @@
   flex-wrap: wrap;
 }
 
+.Span {
+  width: 100%;
+  border-top: 1px solid rgb(177, 177, 177);
+  height: 30px;
+}
+
 .Flex {
   display: flex;
   margin-top: 5vh;
@@ -10,14 +16,24 @@
   .Info {
     margin-left: 10vw;
     width: 100%;
-    h1 {
-      font-size: 3vw;
+
+    .UserFollow {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      // margin: 0 3vw 0 3vw;
+
+      h1 {
+        font-size: 3vw;
+      }
     }
   }
 }
 
 .UserInfo {
   display: flex;
+  justify-content: space-between;
+
   > div {
     margin: 3vw;
     font-size: 2vw;
@@ -27,4 +43,18 @@
 .Posts {
   display: flex;
   flex-direction: column;
+}
+.sicretDiv {
+  color: #fff;
+}
+
+.isLoading {
+  text-align: center;
+  width: 100%;
+}
+
+.messageBtn {
+  i {
+    color: black;
+  }
 }

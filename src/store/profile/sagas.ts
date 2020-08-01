@@ -5,6 +5,7 @@ import {
   queryUserData,
   mutationUserData,
   addAvatarToUser,
+  mutationFollowing,
 } from "../../services/api";
 
 export function* getUserData() {
@@ -47,6 +48,32 @@ export function* setUserData() {
       if (result) {
         yield put(actions.setProfile.success("Data changed successfully"));
         const userData = yield call(queryUserData, userId, authToken);
+        yield put(actions.getProfile.success(userData));
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+}
+
+export function* setFollowUser() {
+  while (true) {
+    const {
+      payload: { followingID },
+    } = yield take(actions.setFollowing.request);
+    console.log(followingID);
+    const authToken = yield select((state) => state.auth.authData.authToken);
+    const userId = yield select((state) => state.auth.authData.id);
+    try {
+      const result = yield call(
+        mutationFollowing,
+        userId,
+        authToken,
+        followingID
+      );
+      if (result) {
+        yield put(actions.setFollowing.success("Data changed successfully"));
+        const userData = yield call(queryUserData, followingID, authToken);
         yield put(actions.getProfile.success(userData));
       }
     } catch (error) {

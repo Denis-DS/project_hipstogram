@@ -2,7 +2,6 @@ import {
   TGetCommentQuery,
   IFilterPosts,
   TPostsData,
-  TGetLikeQuery,
 } from "../store/posts/types";
 import { IMessageFilter, TQueryMessage } from "../store/message/types";
 
@@ -76,21 +75,19 @@ export async function mutationComments(
 
 export async function mutationLike(
   authToken: string,
-  text: string,
-  post: string,
-  answerTo: string | null
+  user: string | null,
+  post: string | null
 ) {
   let variables = {
-    text: text,
     post: { _id: post },
-    answerTo: { _id: answerTo },
+    user: { _id: user },
   };
 
   const data = {
     ...getHeaders(authToken),
     body: JSON.stringify({
-      query: `mutation setLike($post:PostInput, $answerTo: UserInput) {
-                LikeUpsert(like:{post: $post, user:$answerTo}){
+      query: `mutation setLike($post:PostInput, $user: UserInput) {
+                LikeUpsert(like:{post: $post, user:$user}){
                   _id
                 }
               }`,
@@ -100,22 +97,40 @@ export async function mutationLike(
   return queryFetch(data, "/graphql").then((data) => data.data.LikeUpsert._id);
 }
 
-export async function queryLike(authToken: string, query: TGetLikeQuery) {
+export async function queryLike(
+  authToken: string,
+  user: string | null,
+  post: string | null
+) {
+  let variables = [
+    {
+      "post._id": post,
+      "user._id": user,
+    },
+    { sort: [{ _id: -1 }] },
+  ];
+
+  !post && delete variables[0]["post._id"];
+  post && delete variables[0]["user._id"];
   const data = {
     ...getHeaders(authToken),
     body: JSON.stringify({
       query: `query getLike($query:String) {
                 LikeFind(query: $query){
-                  _id post{_id} owner{nick, avatar{url}, _id}
+                  _id post{_id, images{url}} owner{login, avatar{url}, _id}
                 }
               }`,
-      variables: { query: JSON.stringify(query) },
+      variables: { query: JSON.stringify(variables) },
     }),
   };
   return queryFetch(data, "/graphql").then((data) => data.data.LikeFind);
 }
 
-export async function delLike(authToken: string, query: TGetCommentQuery) {
+export async function delLike(authToken: string, _id: string) {
+  let variables = {
+    _id,
+  };
+
   const data = {
     ...getHeaders(authToken),
     body: JSON.stringify({
@@ -124,7 +139,7 @@ export async function delLike(authToken: string, query: TGetCommentQuery) {
                   _id
                 }
               }`,
-      variables: { query: JSON.stringify(query) },
+      variables,
     }),
   };
   return queryFetch(data, "/graphql").then(
@@ -188,7 +203,7 @@ export const queryPostData = async (id: string, authToken: string) => {
                             PostFindOne(query: $adId) {
                               _id,
                               createdAt,
-                              owner{_id, nick, avatar{url},createdAt},
+                              owner{_id, nick, avatar{url},createdAt, login},
                               images{url, _id},
                               title,
                               likes{_id, owner{_id}},
@@ -204,7 +219,7 @@ export const queryPostData = async (id: string, authToken: string) => {
   );
 };
 
-// Advs
+// Posts
 
 export const queryPostsData = async (authToken: string, query: TPostsData) => {
   const data = {
@@ -218,7 +233,7 @@ export const queryPostsData = async (authToken: string, query: TPostsData) => {
                 }
                 createdAt,
                 title,
-                likesCount,
+                likes {_id, owner{_id}},
                 comments{
                   _id
                 }
@@ -229,6 +244,91 @@ export const queryPostsData = async (authToken: string, query: TPostsData) => {
   };
 
   return await queryFetch(data, "/graphql").then((data) => data.data.PostFind);
+};
+
+export const queryFollowingPostsData = async (
+  authToken: string,
+  query: TPostsData,
+  userId: string
+) => {
+  const data = {
+    ...getHeaders(authToken),
+    body: JSON.stringify({
+      query: `query getFollowingPostsData($query: String){
+                PostFind(query: $query) {
+                _id,
+                createdAt,
+                text,
+                owner{_id, nick, avatar{url},createdAt, login, followers{_id}},
+                images{url, _id},
+                title,
+                likes{_id, owner{_id}},
+                likesCount
+                comments{_id}
+                }
+            }`,
+      variables: { query: JSON.stringify(query) },
+    }),
+  };
+
+  const arr: any = [];
+
+  await fetch("/graphql", data)
+    .then((data) => data.json())
+    .then((r) =>
+      r.data.PostFind.forEach((d: any) => {
+        const bool = d.owner._id === userId;
+        if (!bool) {
+          d.owner.followers?.forEach((f: any) => {
+            console.log(d.owner._id === userId);
+            if (f._id === userId || d.owner._id === userId) {
+              arr.push(d);
+            }
+          });
+        } else {
+          arr.push(d);
+        }
+      })
+    );
+
+  return await arr;
+};
+
+export const queryFollowingPostsCount = async (
+  authToken: string,
+  userId: string
+) => {
+  const data = {
+    ...getHeaders(authToken),
+    body: JSON.stringify({
+      query: `query getFollowingPostsCount($query: String){
+                PostFind(query: $query) {
+                  _id,
+                  owner {followers{_id}},
+                  
+                }
+            }`,
+      variables: {
+        query: JSON.stringify([{}, { sort: [{ _id: -1 }] }]),
+      },
+    }),
+  };
+
+  const arr: any = [];
+
+  await fetch("/graphql", data)
+    .then((data) => data.json())
+    .then((r) =>
+      r.data.PostFind.forEach((d: any) =>
+        d.owner.followers?.forEach((f: any) => {
+          if (f._id === userId) {
+            arr.push(d);
+          }
+        })
+      )
+    );
+
+  return await arr.length;
 };
 
 export const queryPostsCount = async (
@@ -297,10 +397,10 @@ export async function queryMessages(authToken: string, query: TQueryMessage) {
     ...getHeaders(authToken),
     body: JSON.stringify({
       query: `query incomingMessage($query: String) {
-          MessageFind(query: $query){
+        DirectFind(query: $query){
             _id createdAt text 
             image {url}
-            owner {nick avatar{url} phones}
+            owner {login avatar{url}}
           }
         }`,
       variables: { query: JSON.stringify(query) },
@@ -322,7 +422,7 @@ export async function mutationMessage(
     ...getHeaders(authToken),
     body: JSON.stringify({
       query: `mutation sendMessage($to:UserInput, $text:String, $image:ImageInput){
-              MessageUpsert(message:{to:$to, text:$text, image:$image}){
+        DirectUpsert(direct:{text:$text, image:$image, to:$to}){
                 _id
               }
             }`,
@@ -331,7 +431,7 @@ export async function mutationMessage(
   };
 
   return await queryFetch(data, "/graphql").then(
-    (data) => data.data.MessageUpsert._id
+    (data) => data.data.MessageUpsert
   );
 }
 
@@ -342,8 +442,8 @@ export const queryMessageCount = async (
   const data = {
     ...getHeaders(authToken),
     body: JSON.stringify({
-      query: `query countAds($query:String){
-                MessageCount(query: $query)
+      query: `query countMsg($query:String){
+                DirectCount(query: $query)
               }`,
       variables: { query: JSON.stringify(query) },
     }),
@@ -394,6 +494,27 @@ export async function queryUserData(userId: string, authToken: string) {
   return queryFetch(data, "/graphql").then((data) => data.data.UserFindOne);
 }
 
+export async function queryUserSuggestions(authToken: string) {
+  const data = {
+    ...getHeaders(authToken),
+    body: JSON.stringify({
+      query: `query getUserSuggestions($query:String){
+        UserFind(query: $query){
+          _id, login, avatar{_id, url}
+        }
+      }`,
+      variables: {
+        query: JSON.stringify([
+          {},
+          { limit: [4], skip: [80], sort: [{ _id: 1 }] },
+        ]),
+      },
+    }),
+  };
+
+  return queryFetch(data, "/graphql").then((data) => data.data.UserFind);
+}
+
 export async function mutationUserData(
   userId: string,
   authToken: string,
@@ -415,6 +536,35 @@ export async function mutationUserData(
         id: userId,
         login: login,
         nick: nick,
+      },
+    }),
+  };
+
+  return await queryFetch(data, "/graphql").then(
+    (data) => data.data.UserUpsert._id
+  );
+}
+
+export async function mutationFollowing(
+  userID: string,
+  authToken: string,
+  followingID: string
+) {
+  const data = {
+    ...getHeaders(authToken),
+    body: JSON.stringify({
+      query: `mutation userFolow ($following: [UserInput], $id: String){
+          UserUpsert(user:{
+            _id: $id
+            following:$following
+          })
+          {
+            _id
+          }
+        }`,
+      variables: {
+        id: userID,
+        following: { _id: followingID },
       },
     }),
   };

@@ -5,7 +5,7 @@ import { IPosts } from "../../../store/posts/types";
 
 const AdvUser = (props: IPosts) => {
   return (
-    <div className="col s6 m12">
+    <div className={style.PostUser}>
       <div className={style.advWrapper}>
         <div className={style.photoWrapper}>
           <Link to={`/postcard/${props._id}`}>

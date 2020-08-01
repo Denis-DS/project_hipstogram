@@ -10,8 +10,8 @@ export function* getPostCardData() {
     try {
       const result = yield call(queryPostData, payload, jwtToken);
       if (result) {
-        const advData = handlerPostCardData(result);
-        yield put(actions.getPostCard.success(advData));
+        const postData = handlerPostCardData(result);
+        yield put(actions.getPostCard.success(postData));
       } else {
         yield put(actions.getPostCard.failure(false));
       }

@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { IPosts } from "../../../store/posts/types";
 import "./ImageBox.scss";
 
-const Adv = (props: IPosts) => {
+const Post = (props: IPosts) => {
   return (
     <div className={style.PostWraper}>
       <Link to={`/postcard/${props._id}`}>
@@ -16,7 +16,7 @@ const Adv = (props: IPosts) => {
                 <span className="visually-hidden">
                   <i className="material-icons">favorite_border</i>
                 </span>
-                {props.likesCount}
+                {props.likes}
               </li>
               <li className="gallery-item-comments">
                 <span className="visually-hidden">
@@ -32,4 +32,4 @@ const Adv = (props: IPosts) => {
   );
 };
 
-export default React.memo(Adv);
+export default React.memo(Post);

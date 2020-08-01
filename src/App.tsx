@@ -31,11 +31,11 @@ const App = () => {
     <Provider store={store}>
       <ConnectedRouter history={history}>
         <Header />
-        <main>
+        <div id="main">
           <div className="container">
             <Routes />
           </div>
-        </main>
+        </div>
         <Footer />
       </ConnectedRouter>
     </Provider>

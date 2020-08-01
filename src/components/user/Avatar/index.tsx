@@ -4,6 +4,7 @@ import style from "./style.module.scss";
 import { IRootState, IRootAction } from "../../../store/rootReducer";
 import { connect } from "react-redux";
 import * as profileActions from "../../../store/profile/actions";
+import img from "../../../img/user-img.png";
 
 const mapStateToProps = (state: IRootState) => ({
   avatar: state.profile.profileData.avatar?.url,
@@ -29,7 +30,7 @@ const Avatar = (props: Props) => {
 
   const avatar = props.avatar
     ? `http://hipstagram.asmer.fs.a-level.com.ua/${props.avatar}`
-    : `http://hipstagram.asmer.fs.a-level.com.ua/images/c21cf837580918bd61242a5fb31b84eb`;
+    : img;
 
   return (
     <div className={style.logoWrapper}>

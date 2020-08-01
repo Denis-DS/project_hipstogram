@@ -1,9 +1,9 @@
 .gallery-item {
   position: relative;
   flex: 1 0 22rem;
-  margin: 1rem;
   color: #fff;
   cursor: pointer;
+  height: calc(100% - 5px);
 }
 
 .gallery-item:hover .gallery-item-info,
@@ -61,7 +61,7 @@
 
 .PostWraper {
   width: calc(33% - 1px);
-  padding: 1em;
+  padding: 0.5em;
 
   img {
     width: 100%;
